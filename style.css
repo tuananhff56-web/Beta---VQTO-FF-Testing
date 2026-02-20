@@ -1707,6 +1707,8 @@ footer {
     left: 0;
     transform: translateY(-50%) translateX(0);
     width: 280px;
+    max-height: 90vh;
+    overflow-y: auto;
     background: rgba(15, 23, 42, 0.95);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -3550,4 +3552,119 @@ footer {
     /* Lighter shadow */
     font-family: 'Inter', sans-serif !important;
     /* Force Inter */
+}
+
+/* =====================================================
+   MOBILE PORTRAIT: Show "Rotate Screen" Overlay
+   Desktop and landscape are NOT affected.
+   ===================================================== */
+.rotate-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: radial-gradient(ellipse at center, #1a0533 0%, #0a0a1a 100%);
+    color: #fff;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    text-align: center;
+    padding: 30px;
+}
+
+.rotate-overlay .rotate-icon {
+    font-size: 4rem;
+    animation: rotatePhone 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+}
+
+.rotate-overlay .rotate-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.rotate-overlay .rotate-desc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    max-width: 280px;
+    line-height: 1.6;
+}
+
+@keyframes rotatePhone {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-20deg);
+    }
+
+    75% {
+        transform: rotate(90deg);
+    }
+}
+
+/* Show overlay ONLY on portrait mobile/tablet */
+@media (max-width: 900px) and (orientation: portrait) {
+    .rotate-overlay {
+        display: flex;
+    }
+}
+
+/* =====================================================
+   INDEX.HTML MOBILE FIX (Portrait Phone)
+   Fixes probability inputs overflow & feedback button
+   ===================================================== */
+@media (max-width: 600px) {
+
+    /* Probability inputs: 5 items → 3+2 rows */
+    .probabilities-group .prob-inputs {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .prob-item label {
+        font-size: 0.75rem;
+        white-space: normal;
+    }
+
+    .prob-item input {
+        padding: 8px 6px;
+        font-size: 0.85rem;
+    }
+
+    /* Floating feedback button: icon only */
+    .floating-feedback {
+        padding: 10px;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        justify-content: center;
+        gap: 0;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .floating-feedback .text {
+        display: none !important;
+        width: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .floating-feedback .icon-circle {
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: none;
+        box-shadow: none;
+    }
 }

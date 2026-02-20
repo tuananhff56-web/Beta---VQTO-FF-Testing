@@ -111,6 +111,7 @@ function simulateOneRun(target, weights, threshold) {
     let currentBadges = 0;
     let batchPulls = 0;
     let singlePulls = 0;
+    let singleCycleIndex = 0; // Cycle counter for single pulls
 
     // Batch Phase
     while (currentBadges < target) {
@@ -121,9 +122,10 @@ function simulateOneRun(target, weights, threshold) {
         batchPulls++;
     }
 
-    // Single Phase
+    // Single Phase (cycle-based: same distribution as batch)
     while (currentBadges < target) {
-        currentBadges += simulateSingle(weights);
+        currentBadges += simulateSingleCycle(weights, singleCycleIndex);
+        singleCycleIndex = (singleCycleIndex + 1) % 10;
         singlePulls++;
     }
 
@@ -223,8 +225,26 @@ function createParticle(container) {
     container.appendChild(p);
 }
 
+// Cycle-based single spin for simulation (matches batch distribution)
+function simulateSingleCycle(weights, cycleIndex) {
+    if (cycleIndex < 5) {
+        // Fixed slot: always 1 badge
+        return 1;
+    } else if (cycleIndex === 5) {
+        // Special slot: 85% -> 1, 15% -> 2
+        const p1 = weights[0];
+        let specialProb1 = 85;
+        if (p1 >= 85) specialProb1 = p1;
+        const rand = Math.random() * 100;
+        return rand < specialProb1 ? 1 : 2;
+    } else {
+        // Random slot (6-9): full probability table
+        return weightedRandom(VAR_VALUES, weights);
+    }
+}
+
 function simulateSingle(weights) {
-    // Use full probability table (matches SpinGame.getRewardValue)
+    // Legacy: pure random single (used by simulateBatch for 4 random slots)
     return weightedRandom(VAR_VALUES, weights);
 }
 
@@ -451,6 +471,7 @@ class SpinGame {
         this.inventory = { 1: 0, 2: 0, 3: 0, 5: 0, 10: 0 }; // Inventory tracking
         this.probs = { 1: 65, 2: 15, 3: 12, 5: 5, 10: 3 };
         this.firstTime = { one: true, ten: true };
+        this.singleSpinCycleIndex = 0; // Cycle counter for single spin (0-9)
         setTimeout(() => this.init(), 100);
     }
 
@@ -539,6 +560,27 @@ class SpinGame {
         return 1;
     }
 
+    // Single spin uses same distribution as batch: 5 fixed + 1 special + 4 random per 10-spin cycle
+    getSingleRewardValue() {
+        const idx = this.singleSpinCycleIndex;
+        this.singleSpinCycleIndex = (this.singleSpinCycleIndex + 1) % 10;
+
+        if (idx < 5) {
+            // Fixed slot: always 1 badge
+            return 1;
+        } else if (idx === 5) {
+            // Special slot: 85% -> 1, 15% -> 2
+            const p1 = this.probs[1];
+            let specialProb1 = 85;
+            if (p1 >= 85) specialProb1 = p1;
+            const rand = Math.random() * 100;
+            return rand < specialProb1 ? 1 : 2;
+        } else {
+            // Random slot (idx 6-9): full probability table
+            return this.getRewardValue();
+        }
+    }
+
     animateSpin(times) {
         const cells = document.querySelectorAll('.honeycomb-diamond .hex-cell.normal');
         const centerPrize = document.querySelector('.center-prize');
@@ -577,9 +619,9 @@ class SpinGame {
                 [rewards[i], rewards[j]] = [rewards[j], rewards[i]];
             }
         } else {
-            // Single Spin Logic: Pure Random
+            // Single Spin Logic: Cycle-based (same distribution as batch)
             for (let i = 0; i < times; i++) {
-                rewards.push(this.getRewardValue());
+                rewards.push(this.getSingleRewardValue());
             }
         }
 
@@ -766,6 +808,7 @@ class SpinGame {
         if (progressFill) {
             const pct = Math.min(100, (this.currentBadges / this.targetBadges) * 100);
             progressFill.style.height = `${pct}%`; // Vertical uses height
+            progressFill.style.width = `${pct}%`;  // Horizontal (mobile) uses width
 
             // Completion Effect
             if (this.currentBadges >= this.targetBadges) {
@@ -1100,6 +1143,7 @@ class SpinGame {
         this.currentBadges = 0;
         this.firstTime = { one: true, ten: true };
         this.inventory = { 1: 0, 2: 0, 3: 0, 5: 0, 10: 0 }; // Reset Inventory
+        this.singleSpinCycleIndex = 0; // Reset single spin cycle
 
         // Reset Target Lock
         this.goalLocked = false;

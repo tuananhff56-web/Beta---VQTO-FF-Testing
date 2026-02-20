@@ -67,17 +67,27 @@ def simulate_batch():
             
     return total_badges
 
-def simulate_single():
+def simulate_single(cycle_index):
     """
-    Simulates one single pull.
-    60% -> 1 badge (fixed part equivalent)
-    40% -> Variable part distribution
+    Simulates one single pull using cycle-based distribution.
+    Same distribution as batch: 5 fixed + 1 special + 4 random per 10-spin cycle.
     """
-    if random.random() < 0.6:
+    if cycle_index < 5:
+        # Fixed slot: always 1 badge
         return 1
+    elif cycle_index == 5:
+        # Special slot: 85% -> 1, 15% -> 2
+        p1 = VAR_WEIGHTS[0]
+        special_prob_1 = 85
+        if p1 >= 85:
+            special_prob_1 = p1
+        rand_val = random.uniform(0, 100)
+        if rand_val < special_prob_1:
+            return 1
+        else:
+            return 2
     else:
-        # Variable part logic for single: 1 item from the variable distribution
-        # Note: Plan says "Theo phân phối biến động {1, 2, 3, 5, 10} (Không áp dụng ràng buộc batch)"
+        # Random slot (6-9): full probability table
         return random.choices(VAR_VALUES, weights=VAR_WEIGHTS, k=1)[0]
 
 def run_simulation():
@@ -98,9 +108,11 @@ def run_simulation():
         current_badges += badges_gained
         batch_pulls += 1
         
-    # 2. Single Pull Phase
+    # 2. Single Pull Phase (cycle-based)
+    single_cycle_index = 0
     while current_badges < TARGET_BADGES:
-        badges_gained = simulate_single()
+        badges_gained = simulate_single(single_cycle_index)
+        single_cycle_index = (single_cycle_index + 1) % 10
         current_badges += badges_gained
         single_pulls += 1
         
