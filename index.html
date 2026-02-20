@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@600&display=swap"
         rel="stylesheet">
+
 </head>
 
 <body>
@@ -36,6 +37,13 @@
                 <div class="input-group">
                     <label for="targetBadges">Mục Tiêu Huy Hiệu</label>
                     <input type="number" id="targetBadges" value="180" min="1">
+                </div>
+
+                <div class="input-group">
+                    <label for="singleSpinThreshold">Chuyển sang quay 1 lượt quay khi còn thiếu (Huy Hiệu)</label>
+                    <input type="number" id="singleSpinThreshold" value="5" min="0">
+                    <p class="input-tip">💡 Ví dụ: Điền 5 nghĩa là khi mục tiêu huy hiệu là 180 mà hiện tại đã có 175
+                        huy hiệu hoặc hơn thì sẽ chuyển sang quay 1 lượt.</p>
                 </div>
 
                 <div class="input-group">
@@ -74,16 +82,20 @@
 
                 <button id="runBtn" class="primary-btn">Chạy Mô Phỏng</button>
 
-                <!-- Fantasy Progress Bar -->
-                <div class="progress-container hidden" id="progressContainer">
-                    <div class="progress-label">
-                        <span id="progressText">Đang quay...</span>
-                        <span id="progressPercent">0%</span>
+                <!-- Simple Progress Bar -->
+                <div id="simpleProgressContainer" class="hidden">
+                    <div class="progress-header">
+                        <span id="simpleProgressStatus">Đang chạy...</span>
+                        <span id="simpleProgressText">0%</span>
                     </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    <div class="progress-track">
+                        <div id="simpleProgressBar"></div>
                     </div>
                 </div>
+
+
+
+
             </section>
 
             <section class="results-panel glass hidden" id="resultsPanel">

@@ -42,9 +42,23 @@ def is_valid_batch(variable_items):
 
 def simulate_batch():
     """Simulates one valid batch pull (10 items)."""
-    # Fixed part: 6 badges
-    total_badges = 6
+    # Fixed part: 5 badges (1 Badge x 5)
+    total_badges = 5
     
+    # Special Slot (6th Item)
+    # VAR_WEIGHTS[0] is the probability for '1' (70% by default)
+    p1 = VAR_WEIGHTS[0]
+    special_prob_1 = 85
+    if p1 >= 85:
+        special_prob_1 = p1
+        
+    rand_val = random.uniform(0, 100)
+    if rand_val < special_prob_1:
+        total_badges += 1
+    else:
+        total_badges += 2
+
+    # Variable part (4 items)
     while True:
         variable_items = get_variable_part()
         if is_valid_batch(variable_items):
