@@ -3621,6 +3621,104 @@ footer {
 }
 
 /* =====================================================
+   LANDSCAPE MOBILE FIX - Compact Result Popup & Icon-only feedback
+   Targets phones in landscape (limited height)
+   ===================================================== */
+@media (max-height: 500px) {
+
+    /* --- Result Popup: ultra-compact --- */
+    .result-container {
+        padding: 8px 10px !important;
+        max-width: 92vw !important;
+        max-height: 94vh !important;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .result-title {
+        font-size: 1rem !important;
+        margin-bottom: 8px !important;
+        padding: 4px 14px !important;
+    }
+
+    .result-grid {
+        gap: 5px !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+        flex-shrink: 0;
+    }
+
+    .result-item {
+        padding: 4px !important;
+        border-radius: 6px !important;
+    }
+
+    .item-icon {
+        font-size: 1.2rem !important;
+        margin-bottom: 2px !important;
+    }
+
+    .item-value {
+        font-size: 0.8rem !important;
+    }
+
+    .item-unit {
+        font-size: 0.6rem !important;
+    }
+
+    .item-badge {
+        font-size: 0.55rem !important;
+        padding: 1px 3px !important;
+    }
+
+    .result-actions {
+        margin-top: 8px !important;
+        gap: 20px !important;
+        flex-shrink: 0;
+    }
+
+    .action-btn {
+        height: 34px !important;
+        width: 120px !important;
+        font-size: 0.75rem !important;
+    }
+
+    .under-btn-price {
+        margin-top: 3px !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Single item view: reduce height */
+    .result-grid.single-item {
+        height: 30vh;
+    }
+
+    /* --- Floating feedback: icon only on landscape mobile --- */
+    .floating-feedback {
+        padding: 10px;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        justify-content: center;
+        gap: 0;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .floating-feedback .text {
+        display: none !important;
+        width: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .floating-feedback .icon-circle {
+        width: 24px;
+        height: 24px;
+        background: none;
+    }
+}
+
+/* =====================================================
    INDEX.HTML MOBILE FIX (Portrait Phone)
    Fixes probability inputs overflow & feedback button
    ===================================================== */
