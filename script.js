@@ -561,24 +561,28 @@ class SpinGame {
     }
 
     // Single spin uses same distribution as batch: 5 fixed + 1 special + 4 random per 10-spin cycle
+    // Order is shuffled each cycle for a natural gacha feel
     getSingleRewardValue() {
-        const idx = this.singleSpinCycleIndex;
-        this.singleSpinCycleIndex = (this.singleSpinCycleIndex + 1) % 10;
+        if (!this._cycleRewards || this._cycleRewards.length === 0) {
+            // Generate new cycle: 5x1 + 1xSpecial + 4xRandom, then shuffle
+            const cycle = [1, 1, 1, 1, 1];
 
-        if (idx < 5) {
-            // Fixed slot: always 1 badge
-            return 1;
-        } else if (idx === 5) {
-            // Special slot: 85% -> 1, 15% -> 2
+            // Special slot
             const p1 = this.probs[1];
-            let specialProb1 = 85;
-            if (p1 >= 85) specialProb1 = p1;
-            const rand = Math.random() * 100;
-            return rand < specialProb1 ? 1 : 2;
-        } else {
-            // Random slot (idx 6-9): full probability table
-            return this.getRewardValue();
+            const specialProb1 = p1 >= 85 ? p1 : 85;
+            cycle.push(Math.random() * 100 < specialProb1 ? 1 : 2);
+
+            // 4 Random slots
+            for (let i = 0; i < 4; i++) cycle.push(this.getRewardValue());
+
+            // Fisher-Yates shuffle
+            for (let i = cycle.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cycle[i], cycle[j]] = [cycle[j], cycle[i]];
+            }
+            this._cycleRewards = cycle;
         }
+        return this._cycleRewards.shift();
     }
 
     animateSpin(times) {
@@ -807,8 +811,14 @@ class SpinGame {
 
         if (progressFill) {
             const pct = Math.min(100, (this.currentBadges / this.targetBadges) * 100);
-            progressFill.style.height = `${pct}%`; // Vertical uses height
-            progressFill.style.width = `${pct}%`;  // Horizontal (mobile) uses width
+            const isMobile = window.innerWidth <= 1024;
+            if (isMobile) {
+                progressFill.style.width = `${pct}%`;
+                progressFill.style.height = '100%';
+            } else {
+                progressFill.style.height = `${pct}%`;
+                progressFill.style.width = '100%';
+            }
 
             // Completion Effect
             if (this.currentBadges >= this.targetBadges) {
@@ -1135,7 +1145,7 @@ class SpinGame {
         });
 
         this.updateUI();
-        this.showToast("Đã đặt lại tiến trình. Tỷ lệ được giữ nguyên.");
+        this.showToast("Đã đặt lại tiến trình. Tỷ lệ vẫn được giữ nguyên.");
     }
 
     reset() {

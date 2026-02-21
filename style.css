@@ -1768,7 +1768,7 @@ footer {
 .sidebar-content {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 .sidebar-title {
@@ -2046,7 +2046,7 @@ footer {
 .prob-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 
 .prob-item-row {
@@ -2054,7 +2054,7 @@ footer {
     align-items: center;
     gap: 12px;
     background: rgba(0, 0, 0, 0.25);
-    padding: 10px 14px;
+    padding: 7px 12px;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: border-color 0.3s;
@@ -2155,7 +2155,7 @@ footer {
 }
 
 .sidebar-footer {
-    margin-top: 10px;
+    margin-top: 5px;
     text-align: center;
     color: #64748b;
     font-size: 0.75rem;
@@ -3626,71 +3626,113 @@ footer {
    ===================================================== */
 @media (max-height: 500px) {
 
-    /* --- Result Popup: ultra-compact --- */
+    /* --- Result Popup: balanced layout, centered vertically --- */
+    .result-modal-overlay {
+        padding: 5px !important;
+    }
+
     .result-container {
-        padding: 8px 10px !important;
-        max-width: 92vw !important;
-        max-height: 94vh !important;
-        overflow-y: auto;
+        padding: 10px 15px !important;
+        max-width: 75vw !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
         display: flex;
         flex-direction: column;
+        align-items: center;
     }
 
     .result-title {
-        font-size: 1rem !important;
-        margin-bottom: 8px !important;
-        padding: 4px 14px !important;
+        font-size: 0.9rem !important;
+        margin-bottom: 6px !important;
+        padding: 3px 14px !important;
+        border-radius: 20px !important;
     }
 
     .result-grid {
         gap: 5px !important;
         grid-template-columns: repeat(5, 1fr) !important;
-        flex-shrink: 0;
+        width: 100%;
     }
 
     .result-item {
-        padding: 4px !important;
+        padding: 5px 4px !important;
         border-radius: 6px !important;
+        aspect-ratio: auto !important;
     }
 
     .item-icon {
-        font-size: 1.2rem !important;
-        margin-bottom: 2px !important;
+        font-size: 1.1rem !important;
+        margin-bottom: 1px !important;
     }
 
     .item-value {
-        font-size: 0.8rem !important;
-    }
-
-    .item-unit {
-        font-size: 0.6rem !important;
-    }
-
-    .item-badge {
-        font-size: 0.55rem !important;
-        padding: 1px 3px !important;
-    }
-
-    .result-actions {
-        margin-top: 8px !important;
-        gap: 20px !important;
-        flex-shrink: 0;
-    }
-
-    .action-btn {
-        height: 34px !important;
-        width: 120px !important;
         font-size: 0.75rem !important;
     }
 
+    .item-unit {
+        font-size: 0.55rem !important;
+    }
+
+    .item-badge {
+        font-size: 0.5rem !important;
+        padding: 1px 3px !important;
+        top: 2px !important;
+        right: 2px !important;
+    }
+
+    .result-actions {
+        margin-top: 40px !important;
+        gap: 80px !important;
+    }
+
+    .action-btn {
+        height: 32px !important;
+        width: 110px !important;
+        font-size: 0.72rem !important;
+        border-radius: 4px !important;
+    }
+
     .under-btn-price {
-        margin-top: 3px !important;
+        margin-top: 2px !important;
+        font-size: 0.7rem !important;
+    }
+
+    /* Single item view: compact */
+    .result-grid.single-item {
+        height: auto !important;
+        min-height: 25vh;
+    }
+
+    .result-grid.single-item .result-item {
+        transform: scale(1) !important;
+    }
+
+    /* --- Badge notification: smaller on landscape mobile --- */
+    .badge-notification {
+        padding: 8px 14px !important;
+        min-width: auto !important;
+        gap: 8px !important;
+        bottom: 10px !important;
+        right: 10px !important;
+    }
+
+    .notification-icon svg {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .notification-values {
+        font-size: 1.1rem !important;
+    }
+
+    .notif-added {
         font-size: 0.8rem !important;
     }
 
-    /* Single item view: reduce height */
-    .result-grid.single-item {
-        height: 30vh;
+    .notification-label {
+        font-size: 0.55rem !important;
+        letter-spacing: 0.5px !important;
     }
 
     /* --- Floating feedback: icon only on landscape mobile --- */
